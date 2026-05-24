@@ -20,11 +20,11 @@ jobs:
       - name: vet
         run: go vet ./...
 
-      - name: test
-        run: go test ./...
-
-      - name: install openmpi
+      - name: install openmpi (for MPI tests)
         run: sudo apt-get install -y libopenmpi-dev openmpi-bin
+
+      - name: test
+        run: CGO_CFLAGS="-I/usr/include/mpi" go test ./...
 
       - name: build
         run: |

@@ -10,12 +10,40 @@ import (
 	mpi "github.com/sbromberger/gompi"
 )
 
+// searchChunk przeszukuje fragment tekstu przypisany do danego procesu MPI.
+// Zwraca liczbę dopasowań których pozycja startowa należy do [start, end).
+func searchChunk(a *automaton.Automaton, text []byte, rank, size, overlap int) int {
+	n := len(text)
+	chunkSize := n / size
+
+	start := rank * chunkSize
+	end := start + chunkSize
+	if rank == size-1 {
+		end = n
+	}
+
+	searchEnd := end + overlap
+	if searchEnd > n {
+		searchEnd = n
+	}
+
+	count := 0
+	for _, m := range a.Search(text[start:searchEnd]) {
+		absPos := start + m.Position
+		matchStart := absPos - a.PatternLens[m.PatternID] + 1
+		if matchStart >= start && matchStart < end {
+			count++
+		}
+	}
+	return count
+}
+
 func main() {
 
 	mpi.Start(false)
 	defer mpi.Stop()
 
-comm := mpi.NewCommunicator(nil)
+	comm := mpi.NewCommunicator(nil)
 
 	rank := comm.Rank()
 	size := comm.Size()
@@ -31,30 +59,22 @@ comm := mpi.NewCommunicator(nil)
 		os.Exit(1)
 	}
 
-	
-	
-	
 	patterns, err := loadLines(*patternsFile)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "rank %d: error reading patterns: %v\n", rank, err)
 		os.Exit(1)
 	}
 
-	
-	
-	
 	text, err := os.ReadFile(*textFile)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "rank %d: error reading text: %v\n", rank, err)
 		os.Exit(1)
 	}
 
-	
 	buildStart := time.Now()
 	a := automaton.Build(patterns)
 	buildDur := time.Since(buildStart)
 
-	
 	maxPatLen := 0
 	for _, p := range patterns {
 		if len(p) > maxPatLen {
@@ -66,40 +86,9 @@ comm := mpi.NewCommunicator(nil)
 		overlap = 0
 	}
 
-	
-	n := len(text)
-	chunkSize := n / size
-
-	start := rank * chunkSize
-	end := start + chunkSize
-	if rank == size-1 {
-		end = n 
-	}
-
-	
-	searchEnd := end + overlap
-	if searchEnd > n {
-		searchEnd = n
-	}
-
-	chunk := text[start:searchEnd]
-
-	
 	searchStart := time.Now()
-	rawMatches := a.Search(chunk)
+	localCount := searchChunk(a, text, rank, size, overlap)
 	searchDur := time.Since(searchStart)
-
-	
-	localCount := 0
-	for _, m := range rawMatches {
-		absPos := start + m.Position
-		patLen := a.PatternLens[m.PatternID]
-		absStart := absPos - patLen + 1
-
-		if absStart >= start && absStart < end {
-			localCount++
-		}
-	}
 
 	
 	
@@ -111,6 +100,7 @@ comm := mpi.NewCommunicator(nil)
 	
 	if rank == 0 {
 		totalCount := int(totalSlice[0])
+		n := len(text)
 		gb := float64(n) / 1e9
 		throughput := gb / searchDur.Seconds()
 
