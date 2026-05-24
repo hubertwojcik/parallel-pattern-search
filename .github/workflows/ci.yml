@@ -23,10 +23,14 @@ jobs:
       - name: test
         run: go test ./...
 
+      - name: install openmpi
+        run: sudo apt-get install -y libopenmpi-dev openmpi-bin
+
       - name: build
         run: |
           go build ./cmd/aho_seq
           go build ./cmd/aho_goroutines
+          CGO_CFLAGS="-I/usr/include/mpi" go build ./cmd/aho_mpi
 
   scripts:
     runs-on: ubuntu-latest
