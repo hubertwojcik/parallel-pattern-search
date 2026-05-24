@@ -24,7 +24,9 @@ jobs:
         run: go test ./...
 
       - name: build
-        run: go build ./cmd/aho_seq
+        run: |
+          go build ./cmd/aho_seq
+          go build ./cmd/aho_goroutines
 
   scripts:
     runs-on: ubuntu-latest
