@@ -17,11 +17,11 @@ jobs:
         with:
           go-version: stable
 
-      - name: vet
-        run: go vet ./...
-
-      - name: install openmpi (for MPI tests)
+      - name: install openmpi
         run: sudo apt-get install -y libopenmpi-dev openmpi-bin
+
+      - name: vet
+        run: CGO_CFLAGS="-I/usr/include/mpi" go vet ./...
 
       - name: test
         run: CGO_CFLAGS="-I/usr/include/mpi" go test ./...
