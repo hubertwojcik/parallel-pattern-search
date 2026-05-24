@@ -1,0 +1,8 @@
+aho_seq
+aho_omp
+aho_mpi
+pfac_ocl
+data/
+benchmarks/results/
+benchmarks/plots/
+CLAUDE.md
