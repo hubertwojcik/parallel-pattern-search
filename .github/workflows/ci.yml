@@ -42,3 +42,19 @@ jobs:
       - name: gen_patterns smoke test
         run: python scripts/gen_patterns.py --count 10 --out /tmp/patterns.txt
 
+  scripts-extended:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: gen_text 10MB
+        run: python scripts/gen_text.py --size 10mb --out /tmp/text_10mb.txt
+
+      - name: gen_patterns 1000
+        run: python scripts/gen_patterns.py --count 1000 --out /tmp/patterns_1000.txt
