@@ -58,3 +58,10 @@ jobs:
 
       - name: gen_patterns 1000
         run: python scripts/gen_patterns.py --count 1000 --out /tmp/patterns_1000.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: generated-data
+          path: |
+            /tmp/text_10mb.txt
+            /tmp/patterns_1000.txt
