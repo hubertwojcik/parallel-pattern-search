@@ -25,3 +25,4 @@ jobs:
 
       - name: build
         run: go build ./cmd/aho_seq
+
