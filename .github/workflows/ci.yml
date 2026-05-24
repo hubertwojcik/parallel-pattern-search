@@ -17,16 +17,20 @@ jobs:
         with:
           go-version: stable
 
+      - name: install openmpi
+        run: sudo apt-get install -y libopenmpi-dev openmpi-bin
+
       - name: vet
-        run: go vet ./...
+        run: CGO_CFLAGS="-I/usr/include/mpi" go vet ./...
 
       - name: test
-        run: go test ./...
+        run: CGO_CFLAGS="-I/usr/include/mpi" go test ./...
 
       - name: build
         run: |
           go build ./cmd/aho_seq
           go build ./cmd/aho_goroutines
+          CGO_CFLAGS="-I/usr/include/mpi" go build ./cmd/aho_mpi
 
   scripts:
     runs-on: ubuntu-latest

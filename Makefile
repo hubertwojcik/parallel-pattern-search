@@ -1,18 +1,27 @@
 # Makefile — buduje wszystkie targety i zarządza danymi testowymi.
 # Używamy go build zamiast CMake — Go nie potrzebuje systemu budowania.
 
-.PHONY: all clean data bench
+.PHONY: all clean data bench seq goroutines mpi
+
+# CGo musi widzieć nagłówki OpenMPI — na Apple Silicon Homebrew instaluje do /opt/homebrew
+CGO_FLAGS = CGO_CFLAGS="-I/opt/homebrew/include" CGO_LDFLAGS="-L/opt/homebrew/lib"
 
 # Buduje wszystkie cztery implementacje
 all:
 	go build -o aho_seq    ./cmd/aho_seq
 	go build -o aho_omp    ./cmd/aho_goroutines
-	go build -o aho_mpi    ./cmd/aho_mpi
+	$(CGO_FLAGS) go build -o aho_mpi    ./cmd/aho_mpi
 	go build -o pfac_ocl   ./cmd/pfac_ocl
 
 # Tylko baseline (przydatne na wczesnym etapie)
 seq:
 	go build -o aho_seq ./cmd/aho_seq
+
+goroutines:
+	go build -o aho_omp ./cmd/aho_goroutines
+
+mpi:
+	$(CGO_FLAGS) go build -o aho_mpi ./cmd/aho_mpi
 
 # Generuje dane testowe we wszystkich rozmiarach używanych w benchmarkach
 data:
