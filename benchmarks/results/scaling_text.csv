@@ -1,9 +1,0 @@
-impl,workers,text_mb,patterns,throughput_gbs
-seq,1,10,100,0.12
-goroutines,4,10,100,0.249
-mpi,4,10,100,0.476
-pfac,1,10,100,1.245
-seq,1,100,100,0.124
-goroutines,4,100,100,0.292
-mpi,4,100,100,0.477
-pfac,1,100,100,4.241
