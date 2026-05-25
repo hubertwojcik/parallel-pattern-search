@@ -17,17 +17,14 @@ jobs:
         with:
           go-version: stable
 
-      - name: install openmpi
-        run: sudo apt-get install -y libopenmpi-dev openmpi-bin
+      - name: install dependencies
+        run: sudo apt-get install -y libopenmpi-dev openmpi-bin ocl-icd-opencl-dev opencl-headers
 
       - name: vet
         run: CGO_CFLAGS="-I/usr/include/mpi" go vet ./...
 
       - name: test
         run: CGO_CFLAGS="-I/usr/include/mpi" go test ./...
-
-      - name: install opencl
-        run: sudo apt-get install -y ocl-icd-opencl-dev opencl-headers
 
       - name: build
         run: |
