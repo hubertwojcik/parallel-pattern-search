@@ -64,10 +64,7 @@ func TestMatchesEqualSeq(t *testing.T) {
 	}
 }
 
-// TestBoundaryMatch sprawdza konkretny przypadek wzorca na granicy chunka.
 func TestBoundaryMatch(t *testing.T) {
-	// Tekst ma 10 bajtów, workers=2 → granica przy bajcie 5.
-	// "hers" zaczyna się na pozycji 3, kończy na 6 — przechodzi przez granicę.
 	text := []byte("his hers ok")
 	a := automaton.Build(testPatterns)
 

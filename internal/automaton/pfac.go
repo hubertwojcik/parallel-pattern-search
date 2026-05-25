@@ -1,20 +1,11 @@
 package automaton
 
-// PFACTable to spłaszczony, gotowy na GPU automat PFAC.
-// Goto[state*AlphabetSize + c] = następny stan (-1 = martwy).
-// HasOutput[state] = 1 jeśli w tym stanie kończy się jakiś wzorzec.
-//
-// Różnica względem AC: brak dowiązań awaryjnych (failure links).
-// W korzeniu brakujące znaki dają -1, nie pętlę do korzenia.
-// Dzięki temu każdy wątek GPU może niezależnie zatrzymać się przy
-// pierwszym nierozpoznanym znaku.
 type PFACTable struct {
 	Goto      []int32
 	HasOutput []int32
 	NumStates int
 }
 
-// BuildPFAC buduje samo drzewo trie (bez failure links) dla algorytmu PFAC.
 func BuildPFAC(patterns []string) *PFACTable {
 	gotoRaw := [][]int32{make([]int32, AlphabetSize)}
 	for i := range gotoRaw[0] {

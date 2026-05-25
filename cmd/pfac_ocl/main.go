@@ -37,12 +37,10 @@ func main() {
 		log.Fatalf("cannot read kernel %s: %v", *kernelFile, err)
 	}
 
-	// --- Budowanie automatu PFAC (CPU) ---
 	buildStart := time.Now()
 	table := automaton.BuildPFAC(patterns)
 	buildDur := time.Since(buildStart)
 
-	// --- Inicjalizacja OpenCL ---
 	platforms, err := cl.GetPlatforms()
 	if err != nil || len(platforms) == 0 {
 		log.Fatal("no OpenCL platforms:", err)
@@ -87,7 +85,6 @@ func main() {
 		log.Fatal("create kernel:", err)
 	}
 
-	// --- Bufory GPU ---
 	textBuf, err := ctx.CreateBuffer(cl.MemReadOnly|cl.MemCopyHostPtr, text)
 	if err != nil {
 		log.Fatal("text buffer:", err)
@@ -111,7 +108,6 @@ func main() {
 		log.Fatal("result buffer:", err)
 	}
 
-	// --- Argumenty kernela ---
 	textLen     := int32(len(text))
 	alphabetSz  := int32(automaton.AlphabetSize)
 
@@ -122,7 +118,6 @@ func main() {
 	must(kernel.SetArgInt32(4, alphabetSz))
 	must(kernel.SetArgBuffer(5, resultBuf))
 
-	// --- Uruchomienie kernela ---
 	searchStart := time.Now()
 	if _, err = queue.EnqueueNDRangeKernel(kernel, nil, []int{len(text)}, nil, nil); err != nil {
 		log.Fatal("enqueue kernel:", err)
@@ -132,7 +127,6 @@ func main() {
 	}
 	searchDur := time.Since(searchStart)
 
-	// --- Odczyt wyniku ---
 	if _, err = queue.EnqueueReadBuffer(resultBuf, true, 0, 4, unsafe.Pointer(&matchCount), nil); err != nil {
 		log.Fatal("read result:", err)
 	}
