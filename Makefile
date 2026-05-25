@@ -23,6 +23,9 @@ goroutines:
 mpi:
 	$(CGO_FLAGS) go build -o aho_mpi ./cmd/aho_mpi
 
+pfac:
+	go build -tags opencl -o pfac_ocl ./cmd/pfac_ocl
+
 # Generuje dane testowe we wszystkich rozmiarach używanych w benchmarkach
 data:
 	mkdir -p data

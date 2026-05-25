@@ -1,2 +1,4 @@
+github.com/jgillich/go-opencl v0.0.0-20180608191952-a0efba3e5257 h1:CBOaGRHrueOBsM7vclAiWv4aecXkEAjGfYPGPgM9AdU=
+github.com/jgillich/go-opencl v0.0.0-20180608191952-a0efba3e5257/go.mod h1:zVb9psSAj+VpRI2Kp8J9sG437/VkNvl+l3dBMAUmGi4=
 github.com/sbromberger/gompi v0.2.0 h1:SM+vHgYN5fzT2RVePXKP8dgVx+278Tku+nS+LCBnt5Q=
 github.com/sbromberger/gompi v0.2.0/go.mod h1:7Rll8EsxkeEFIlcGXtwqmk1H07DyRevU/87z+h++dHQ=

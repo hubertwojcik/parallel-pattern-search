@@ -29,7 +29,6 @@ func overlap(a *automaton.Automaton) int {
 	return max - 1
 }
 
-// TestChunksSumToSeq sprawdza że suma po wszystkich rankach == wynik sekwencyjny.
 func TestChunksSumToSeq(t *testing.T) {
 	a := automaton.Build(testPatterns)
 	ov := overlap(a)
@@ -46,9 +45,7 @@ func TestChunksSumToSeq(t *testing.T) {
 	}
 }
 
-// TestBoundaryMatch sprawdza wzorzec przecinający granicę między procesami.
 func TestBoundaryMatch(t *testing.T) {
-	// "hers" zaczyna się w pierwszym chunka, kończy w drugim
 	text := []byte("his hers end")
 	a := automaton.Build(testPatterns)
 	ov := overlap(a)
@@ -63,7 +60,6 @@ func TestBoundaryMatch(t *testing.T) {
 	}
 }
 
-// TestNoDoubleCounting sprawdza że wzorzec na granicy nie jest liczony dwa razy.
 func TestNoDoubleCounting(t *testing.T) {
 	a := automaton.Build(testPatterns)
 	ov := overlap(a)
@@ -85,7 +81,6 @@ func TestNoDoubleCounting(t *testing.T) {
 	}
 }
 
-// TestSingleProcess sprawdza że jeden proces = wynik sekwencyjny.
 func TestSingleProcess(t *testing.T) {
 	a := automaton.Build(testPatterns)
 	got := searchChunk(a, testText, 0, 1, overlap(a))
@@ -95,7 +90,6 @@ func TestSingleProcess(t *testing.T) {
 	}
 }
 
-// TestDeterministic sprawdza że wyniki są powtarzalne.
 func TestDeterministic(t *testing.T) {
 	a := automaton.Build(testPatterns)
 	ov := overlap(a)
@@ -106,9 +100,7 @@ func TestDeterministic(t *testing.T) {
 		counts1[rank] = searchChunk(a, testText, rank, 4, ov)
 		counts2[rank] = searchChunk(a, testText, rank, 4, ov)
 	}
-	if !sort.IntsAreSorted(append(counts1, counts2...)) {
-		// tylko sprawdzamy że są identyczne
-	}
+	_ = sort.IntsAreSorted
 	for i := range counts1 {
 		if counts1[i] != counts2[i] {
 			t.Errorf("rank %d: niepowtarzalny wynik %d vs %d", i, counts1[i], counts2[i])
