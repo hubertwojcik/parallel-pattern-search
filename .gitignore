@@ -3,6 +3,6 @@
 /aho_mpi
 /pfac_ocl
 data/
-benchmarks/results/
+benchmarks/plots/
 benchmarks/plots/
 CLAUDE.md
