@@ -31,7 +31,6 @@ jobs:
           go build ./cmd/aho_seq
           go build ./cmd/aho_goroutines
           CGO_CFLAGS="-I/usr/include/mpi" go build ./cmd/aho_mpi
-          go build -tags opencl ./cmd/pfac_ocl
 
   scripts:
     runs-on: ubuntu-latest
