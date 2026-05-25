@@ -26,11 +26,15 @@ jobs:
       - name: test
         run: CGO_CFLAGS="-I/usr/include/mpi" go test ./...
 
+      - name: install opencl
+        run: sudo apt-get install -y ocl-icd-opencl-dev opencl-headers
+
       - name: build
         run: |
           go build ./cmd/aho_seq
           go build ./cmd/aho_goroutines
           CGO_CFLAGS="-I/usr/include/mpi" go build ./cmd/aho_mpi
+          go build ./cmd/pfac_ocl
 
   scripts:
     runs-on: ubuntu-latest
