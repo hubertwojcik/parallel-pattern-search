@@ -18,7 +18,7 @@ jobs:
           go-version: stable
 
       - name: install dependencies
-        run: sudo apt-get install -y libopenmpi-dev openmpi-bin ocl-icd-opencl-dev opencl-headers
+        run: sudo apt-get install -y libopenmpi-dev openmpi-bin
 
       - name: vet
         run: CGO_CFLAGS="-I/usr/include/mpi" go vet ./...
@@ -31,7 +31,7 @@ jobs:
           go build ./cmd/aho_seq
           go build ./cmd/aho_goroutines
           CGO_CFLAGS="-I/usr/include/mpi" go build ./cmd/aho_mpi
-          go build ./cmd/pfac_ocl
+          go build -tags opencl ./cmd/pfac_ocl
 
   scripts:
     runs-on: ubuntu-latest
