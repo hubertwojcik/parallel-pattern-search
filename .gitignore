@@ -5,4 +5,5 @@
 data/
 benchmarks/results/
 benchmarks/plots/
+docs/report.md
 CLAUDE.md
